@@ -34,7 +34,7 @@ int threadpool_submit(threadpool_t *pool,
                       threadpool_item_t *item, 
                       threadpool_priority_t priority);
 
-void threadpool_keepAlive(threadpool_t *pool);
+void threadpool_keepalive(threadpool_t *pool);
 
 bool threadpool_cancel(threadpool_t *pool, threadpool_item_t *item);
 
