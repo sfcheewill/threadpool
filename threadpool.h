@@ -24,15 +24,16 @@ typedef enum threadpool_priority {
     THREAD_POOL_PRIORITY_HIGH = 0x9
 } threadpool_priority_t;
 
-
 int threadpool_create(threadpool_t **ppool,
-                      unsigned int threads,
+                      uint32_t threads,
                       threadpool_shutdown_t shutdown_handler,
                       void *shutdown_handler_context);
 
 int threadpool_submit(threadpool_t *pool, 
                       threadpool_item_t *item, 
                       threadpool_priority_t priority);
+
+int threadpool_submitex(threadpool_t *pool, threadpool_item_t *item);
 
 void threadpool_keepalive(threadpool_t *pool);
 

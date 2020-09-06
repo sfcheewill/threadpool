@@ -81,16 +81,9 @@ inline void list_insert_head(struct list_entry *head, struct list_entry *entry)
     head->next = entry;
 }
 
-
 #define container_of(address, type, field) ((type *)( \
                                             (char*)(address) - \
                                             (char*)(&((type *)0)->field)))
-
-
-
-
-
-
 
 #ifdef __cplusplus
 }

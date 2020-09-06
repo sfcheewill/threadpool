@@ -1,4 +1,5 @@
 #include "threadpool.h"
+#include "threadpool_provider.h"
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,12 +14,6 @@ typedef enum shutdown_state {
     SHUTDOWN_STATE_ABORT,
     SHUTDOWN_STATE_COMPLETE
 } shutdown_state_t;
-
-typedef struct threadpool_provider {
-    bool (*submit)(void);
-    void (*submit_lost_work)(unsigned int active_threads,unsigned int threads);
-    void (*close)(void);
-} threadpool_provider_t;
 
 typedef struct threadpool_queue {
     struct list_entry queue_normal;
@@ -231,7 +226,7 @@ void thread_pool_async_dequeue(threadpool_t *pool)
 
 
 int threadpool_create(threadpool_t **ppool,
-                      unsigned int max_threads, 
+                      uint32_t max_threads, 
                       threadpool_shutdown_t shutdown_handler,
                       void *shutdown_handler_context)
 {
@@ -270,7 +265,6 @@ int threadpool_submit(threadpool_t *pool,
                       threadpool_item_t *item, 
                       threadpool_priority_t priority)
 {
-
     int ret;
 
     assert(item->action);
@@ -315,6 +309,11 @@ int threadpool_submit(threadpool_t *pool,
     pthread_mutex_unlock(&pool->mutex);
     
     return ret;
+}
+
+int threadpool_submitex(threadpool_t *pool, threadpool_item_t *item)
+{
+    return threadpool_submit(pool, item, THREAD_POOL_PRIORITY_NORMAL);
 }
 
 void threadpool_keepalive(threadpool_t *pool)
